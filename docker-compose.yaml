@@ -1,0 +1,10 @@
+services:
+  greenlight-db:
+    container_name: greenlight-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: dzenthai
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: greenlight
+    ports:
+      - '5432:5432'

@@ -43,7 +43,7 @@ func main() {
 		IdleTimeout:  time.Minute,
 	}
 
-	logger.Info("server establish connection", "port", cfg.port, "env", cfg.env)
+	logger.Info("the server is establishing a connection", "port", cfg.port, "env", cfg.env)
 	if err := srv.ListenAndServe(); err != nil {
 		logger.Error("server connection error", "err", err)
 		os.Exit(1)
