@@ -11,6 +11,7 @@ import (
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"greenlight.dzenthai.net/internal/data"
 )
 
 const version = "1.0.0"
@@ -29,6 +30,7 @@ type config struct {
 type application struct {
 	cfg    config
 	logger *slog.Logger
+	models data.Models
 }
 
 func main() {
@@ -60,6 +62,7 @@ func main() {
 	app := &application{
 		cfg:    cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	srv := &http.Server{
