@@ -2,8 +2,10 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
+	"github.com/lib/pq"
 	"greenlight.dzenthai.net/internal/validator"
 )
 
@@ -20,6 +22,8 @@ type Movie struct {
 type MovieModel struct {
 	db *sql.DB
 }
+
+var ErrRecordNotFound = errors.New("record not found")
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {
 	v.Check(movie.Title != "", "title", "must be provided")
@@ -41,13 +45,38 @@ func (m MovieModel) Insert(movie *Movie) error {
 		VALUES ($1, $2, $3, $4) 
 		RETURNING id, created_at, version`
 
-	args := []any{movie.Title, movie.Year, movie.Runtime, movie.Genres}
+	args := []any{movie.Title, movie.Year, movie.Runtime, pq.Array(movie.Genres)}
 
 	return m.db.QueryRow(query, args...).Scan(&movie.ID, &movie.CreatedAt, &movie.Version)
 }
 
 func (m MovieModel) Get(id int64) (*Movie, error) {
-	return nil, nil
+	query := `SELECT id, created_at, title, year, runtime, genres, version FROM movies WHERE id = $1`
+
+	var movie Movie
+
+	err := m.db.QueryRow(
+		query, id,
+	).Scan(
+		&movie.ID,
+		&movie.CreatedAt,
+		&movie.Title,
+		&movie.Year,
+		&movie.Runtime,
+		pq.Array(&movie.Genres),
+		&movie.Version,
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &movie, nil
 }
 
 func (m MovieModel) Update(movie *Movie) error {
