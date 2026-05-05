@@ -4,12 +4,22 @@ import (
 	"net/http"
 )
 
+type healthcheckData struct {
+	Status     string         `json:"status"`
+	SystemInfo systemInfoData `json:"system_info"`
+}
+
+type systemInfoData struct {
+	Environment string `json:"environment"`
+	Version     string `json:"version"`
+}
+
 func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]any{
-		"status": "available",
-		"system_info": map[string]string{
-			"environment": app.cfg.env,
-			"version":     version,
+	data := healthcheckData{
+		Status: "available",
+		SystemInfo: systemInfoData{
+			Environment: app.cfg.env,
+			Version:     version,
 		},
 	}
 
