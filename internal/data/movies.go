@@ -39,31 +39,37 @@ func ValidateMovie(v *validator.Validator, movie *Movie) {
 	v.Check(validator.Unique(movie.Genres), "genres", "must not contain duplicate values")
 }
 
-func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*Movie, error) {
+func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]Movie, Metadata, error) {
 	query := fmt.Sprintf(`
-		SELECT id, created_at, title, year, runtime, genres, version
+		SELECT count(*) OVER(), id, created_at, title, year, runtime, genres, version
 		FROM movies
 		WHERE (to_tsvector('simple', title) @@ plainto_tsquery('simple', $1) OR $1 = '')
 		AND (genres @> $2 OR $2 = '{}')
-		ORDER BY %s %s, id ASC`, filters.sortColumn(), filters.sortDirection())
+		ORDER BY %s %s, id ASC
+		LIMIT $3 OFFSET $4`, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	rows, err := m.db.QueryContext(ctx, query, title, genres)
+	args := []any{title, genres, filters.limit(), filters.offset()}
+
+	rows, err := m.db.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, err
+		return []Movie{}, Metadata{}, err
 	}
 
 	defer func(rows *sql.Rows) {
 		_ = rows.Close()
 	}(rows)
 
-	var movies []*Movie
+	var totalRecords int
+
+	movies := make([]Movie, 0)
 
 	for rows.Next() {
 		var movie Movie
 		err = rows.Scan(
+			&totalRecords,
 			&movie.ID,
 			&movie.CreatedAt,
 			&movie.Title,
@@ -73,16 +79,18 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 			&movie.Version,
 		)
 		if err != nil {
-			return nil, err
+			return []Movie{}, Metadata{}, err
 		}
-		movies = append(movies, &movie)
+		movies = append(movies, movie)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return []Movie{}, Metadata{}, err
 	}
 
-	return movies, nil
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return movies, metadata, nil
 }
 
 func (m MovieModel) Insert(movie *Movie) error {
