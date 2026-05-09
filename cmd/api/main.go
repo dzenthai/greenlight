@@ -68,14 +68,15 @@ func main() {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.port),
 		Handler:      app.routes(),
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		IdleTimeout:  time.Minute,
 	}
 
-	logger.Info("the server is establishing a connection", "port", cfg.port, "env", cfg.env)
+	logger.Info("starting server", "addr", srv.Addr, "env", cfg.env)
 	if err = srv.ListenAndServe(); err != nil {
-		logger.Error("server connection error", "err", err)
+		logger.Error("server stopped", "err", err)
 		os.Exit(1)
 	}
 }

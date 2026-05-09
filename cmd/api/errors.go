@@ -18,7 +18,7 @@ func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, st
 }
 
 func (app *application) logError(r *http.Request, err error) {
-	app.logger.Error("error occurs", "err", err)
+	app.logger.Error("error occurs", "err", err, "method", r.Method, "uri", r.RequestURI)
 }
 
 func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
