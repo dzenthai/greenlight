@@ -4,9 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"flag"
-	"fmt"
 	"log/slog"
-	"net/http"
 	"os"
 	"time"
 
@@ -74,18 +72,8 @@ func main() {
 		models: data.NewModels(db),
 	}
 
-	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      app.routes(),
-		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
-		WriteTimeout: 30 * time.Second,
-		ReadTimeout:  10 * time.Second,
-		IdleTimeout:  time.Minute,
-	}
-
-	logger.Info("starting server", "addr", srv.Addr, "env", cfg.env)
-	if err = srv.ListenAndServe(); err != nil {
-		logger.Error("server stopped", "err", err)
+	if err = app.serve(); err != nil {
+		logger.Error("server stopped unexpectedly", "err", err)
 		os.Exit(1)
 	}
 }
