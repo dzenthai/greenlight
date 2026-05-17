@@ -22,6 +22,8 @@ func (app *application) serve() error {
 		IdleTimeout:  time.Minute,
 	}
 
+	app.logger.Info("starting server", "port", app.cfg.port, "env", app.cfg.env)
+
 	shutdownError := make(chan error)
 
 	go func() {

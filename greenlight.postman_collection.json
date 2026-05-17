@@ -1,0 +1,225 @@
+{
+  "info": {
+    "_postman_id": "403f0e1a-ed71-4ef1-9432-a2ff6d196c0b",
+    "name": "greenlight",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35145925"
+  },
+  "item": [
+    {
+      "name": "localhost:4000/v1/movies/4",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/movies/4",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "movies",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/movies",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Moana\",\"year\":2016,\"runtime\":\"107 mins\", \"genres\":[\"animation\",\"adventure\"]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/movies",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/movies/4",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"year\":1986}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/movies/4",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "movies",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/movies/3",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/movies/3",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "movies",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/users",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"dzenthai\", \"email\": \"dzenthai@example.com\", \"password\": \"pa55word\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/users",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/healthcheck",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:4000/v1/healthcheck",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "healthcheck"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:4000/v1/users/activated",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"token\": \"OYRAAYCGQCWSXI6CPHYXPVDWU4\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:4000/v1/users/activated",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "v1",
+            "users",
+            "activated"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
