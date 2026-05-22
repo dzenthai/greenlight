@@ -1,7 +1,7 @@
 services:
   greenlight-db:
     container_name: greenlight-db
-    image: postgres:latest
+    image: postgres:17
     environment:
       POSTGRES_USER: dzenthai
       POSTGRES_PASSWORD: 1234
