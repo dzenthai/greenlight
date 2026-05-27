@@ -87,7 +87,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 
 		w.Header().Add("Vary", "Authorization")
 
-		authorizationHeader := w.Header().Get("Authorization")
+		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
 			app.contextSetUser(r, data.AnonymousUser)
@@ -128,7 +128,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 }
 
 func (app *application) requireActivatedUser(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		user := app.contextGetUser(r)
 
 		if user.IsAnonymous() {
@@ -142,5 +142,5 @@ func (app *application) requireActivatedUser(next http.HandlerFunc) http.Handler
 		}
 
 		next.ServeHTTP(w, r)
-	})
+	}
 }
