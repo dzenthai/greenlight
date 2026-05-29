@@ -15,6 +15,7 @@ type Models struct {
 	MovieModel
 	UserModel
 	TokenModel
+	PermissionModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -22,5 +23,6 @@ func NewModels(db *sql.DB) Models {
 		MovieModel{db: db},
 		UserModel{db: db},
 		TokenModel{db: db},
+		PermissionModel{db: db},
 	}
 }
