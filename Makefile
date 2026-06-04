@@ -19,4 +19,4 @@ db/migrations/new:
 .PHONY: db/migrations/up
 db/migrations/up: confirm
 	@echo 'Running up migrations...'
-	migrate -path ./migrations -database postgres://dzenthai:1234@localhost:5432/greenlight?sslmode=disable up
+	migrate -path ./migrations -database ${DSN} up

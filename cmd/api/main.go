@@ -56,23 +56,23 @@ type application struct {
 func main() {
 	var cfg config
 
-	flag.IntVar(&cfg.port, "port", 4000, "Server port")
-	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://dzenthai:1234@localhost:5432/greenlight", "PostgreSQL data source name")
+	flag.IntVar(&cfg.port, "port", getIntEnv("PORT", 4000), "Server port")
+	flag.StringVar(&cfg.env, "env", getStringEnv("ENV", "development"), "Environment (development|staging|production)")
+	flag.StringVar(&cfg.db.dsn, "dsn", getStringEnv("DSN", "localhost:5432/postgres"), "PostgreSQL data source name")
 
-	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
-	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
-	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection idle time")
+	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", getIntEnv("MAX_OPEN_CONNS", 25), "PostgreSQL max open connections")
+	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", getIntEnv("MAX_IDLE_CONNS", 25), "PostgreSQL max idle connections")
+	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", getStringEnv("MAX_IDLE_TIME", "15m"), "PostgreSQL max connection idle time")
 
-	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 2, "Rate limiter maximum requests per second")
-	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 4, "Rate limiter maximum burst")
-	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
+	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", getFloatEnv("LIMITER_RPS", 2), "Rate limiter maximum requests per second")
+	flag.IntVar(&cfg.limiter.burst, "limiter-burst", getIntEnv("LIMITER_BURST", 4), "Rate limiter maximum burst")
+	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", getBoolEnv("LIMITER_ENABLED", true), "Enable rate limiter")
 
-	flag.StringVar(&cfg.smtp.host, "smtp-host", "sandbox.smtp.mailtrap.io", "SMTP host")
-	flag.IntVar(&cfg.smtp.port, "smtp-port", 25, "SMTP port")
-	flag.StringVar(&cfg.smtp.username, "smtp-username", "ed72cd993b8379", "SMTP Username")
-	flag.StringVar(&cfg.smtp.password, "smtp-password", "19f6984484bf38", "SMTP Password")
-	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "Greenlight <no-reply@greenlight.dzenthai.net>", "SMTP Sender")
+	flag.StringVar(&cfg.smtp.host, "smtp-host", getStringEnv("SMTP_HOST", ""), "SMTP host")
+	flag.IntVar(&cfg.smtp.port, "smtp-port", getIntEnv("SMTP_PORT", 25), "SMTP port")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", getStringEnv("SMTP_USERNAME", ""), "SMTP Username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", getStringEnv("SMTP_PASSWORD", ""), "SMTP Password")
+	flag.StringVar(&cfg.smtp.sender, "smtp-sender", getStringEnv("SMTP_SENDER", ""), "SMTP Sender")
 	flag.Func("cors-trusted-origins", "Trusted CORS origins (space separated)", func(val string) error {
 		cfg.cors.trustedOrigins = strings.Fields(val)
 		return nil
