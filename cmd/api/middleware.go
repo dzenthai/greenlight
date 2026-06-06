@@ -199,7 +199,7 @@ type metricsResponseWriter struct {
 }
 
 func (mw *metricsResponseWriter) WriteHeader(statusCode int) {
-	mw.WriteHeader(statusCode)
+	mw.ResponseWriter.WriteHeader(statusCode)
 	if !mw.headerWritten {
 		mw.statusCode = statusCode
 		mw.headerWritten = true
@@ -212,7 +212,7 @@ func (mw *metricsResponseWriter) Write(b []byte) (int, error) {
 		mw.headerWritten = true
 	}
 
-	return mw.Write(b)
+	return mw.ResponseWriter.Write(b)
 }
 
 func (mw *metricsResponseWriter) Unwrap() http.ResponseWriter {
