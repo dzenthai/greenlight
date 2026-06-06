@@ -5,6 +5,7 @@ go 1.26.2
 require (
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/lib/pq v1.12.3
+	github.com/realclientip/realclientip-go v1.0.0
 	github.com/wneessen/go-mail v0.7.3
 	golang.org/x/crypto v0.51.0
 	golang.org/x/time v0.15.0

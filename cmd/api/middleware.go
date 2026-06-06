@@ -4,13 +4,13 @@ import (
 	"errors"
 	"expvar"
 	"fmt"
-	"net"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/realclientip/realclientip-go"
 	"golang.org/x/time/rate"
 	"greenlight.dzenthai.net/internal/data"
 	"greenlight.dzenthai.net/internal/validator"
@@ -62,6 +62,10 @@ func (app *application) rateLimiting(next http.Handler) http.Handler {
 		mu      sync.Mutex
 		clients = make(map[string]*client)
 	)
+	strategy, err := realclientip.NewRightmostNonPrivateStrategy("X-Forwarded-For")
+	if err != nil {
+		panic(err)
+	}
 	if app.cfg.limiter.enabled {
 		go func() {
 			for {
@@ -81,11 +85,8 @@ func (app *application) rateLimiting(next http.Handler) http.Handler {
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if app.cfg.limiter.enabled {
-			ip, _, err := net.SplitHostPort(r.RemoteAddr)
-			if err != nil {
-				app.serverErrorResponse(w, r, err)
-				return
-			}
+			ip := strategy.ClientIP(r.Header, r.RemoteAddr)
+
 			mu.Lock()
 			if _, found := clients[ip]; !found {
 				rps := app.cfg.limiter.rps
