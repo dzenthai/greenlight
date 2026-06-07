@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"expvar"
 	"flag"
+	"fmt"
 	"log/slog"
 	"os"
 	"runtime"
@@ -15,9 +16,10 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"greenlight.dzenthai.net/internal/data"
 	"greenlight.dzenthai.net/internal/mailer"
+	"greenlight.dzenthai.net/internal/vcs"
 )
 
-const version = "1.0.0"
+var version = vcs.Version()
 
 type config struct {
 	port int
@@ -77,7 +79,13 @@ func main() {
 		cfg.cors.trustedOrigins = strings.Fields(val)
 		return nil
 	})
+	displayVersion := flag.Bool("version", true, "Display version and exit")
 	flag.Parse()
+
+	if *displayVersion {
+		fmt.Printf("Version:\t%s\n", version)
+		os.Exit(0)
+	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
