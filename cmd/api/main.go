@@ -79,7 +79,7 @@ func main() {
 		cfg.cors.trustedOrigins = strings.Fields(val)
 		return nil
 	})
-	displayVersion := flag.Bool("version", true, "Display version and exit")
+	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
 
 	if *displayVersion {

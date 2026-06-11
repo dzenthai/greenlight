@@ -39,3 +39,19 @@ build/api:
 	@echo 'Building cmd/api...'
 	go build -ldflags='-s' -o=./bin/api ./cmd/api
 	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/api ./cmd/api
+
+.PHONY: production/connect
+production/connect:
+	ssh greenlight@${PROD_IP}
+
+.PHONY: production/deploy/api
+production/deploy/api:
+	rsync -P ./bin/api greenlight@${PROD_IP}:~
+	rsync -rP --delete ./migrations greenlight@${PROD_IP}:~
+	rsync -P ./remote/production/api.service greenlight@${PROD_IP}:~
+	ssh -t greenlight@${PROD_IP} '\
+    migrate -path ~/migrations -database $$DSN up \
+    && sudo mv ~/api.service /etc/systemd/system/ \
+    && sudo systemctl enable api \
+    && sudo systemctl restart api \
+    '

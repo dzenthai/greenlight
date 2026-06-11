@@ -34,11 +34,11 @@ mv migrate.linux-amd64 /usr/local/bin/migrate
 
 apt --yes install postgresql
 
-udo -i -u postgres psql -c "CREATE DATABASE greenlight"
+sudo -i -u postgres psql -c "CREATE DATABASE greenlight"
 sudo -i -u postgres psql -d greenlight -c "CREATE EXTENSION IF NOT EXISTS citext"
 sudo -i -u postgres psql -d greenlight -c "CREATE ROLE greenlight WITH LOGIN PASSWORD '${DB_PASSWORD}'"
 
-echo "GREENLIGHT_DB_DSN='postgres://greenlight:${DB_PASSWORD}@localhost/greenlight'" >> /etc/environment
+echo "DSN='postgres://greenlight:${DB_PASSWORD}@localhost/greenlight'" >> /etc/environment
 
 apt install -y debian-keyring debian-archive-keyring apt-transport-https
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
